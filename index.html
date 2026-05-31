@@ -2,8 +2,12 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=devi<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quà Tặng Quả Cầu Cong 3D</title>
+    <title>Quà Tặng Quả Cầu 3D</title>
     <style>
         * {
             box-sizing: border-box;
@@ -96,7 +100,7 @@
             max-width: 600px;
         }
 
-        /* --- MÀN HÌNH 3: QUẢ CẦU CONG TRÒN 3D --- */
+        /* --- MÀN HÌNH 3: QUẢ CẦU 3D HOÀN CHỈNH --- */
         #screen3 {
             background: radial-gradient(circle, #1a0010 0%, #000000 100%);
             flex-direction: column;
@@ -107,40 +111,43 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            perspective: 800px; /* Thu hẹp góc nhìn để tạo hiệu ứng thấu kính hội tụ cong lồi */
+            perspective: 1400px; /* Tăng chiều sâu trường nhìn 3D */
         }
         .sphere-container {
             width: 0px;
             height: 0px;
             position: relative;
             transform-style: preserve-3d;
-            animation: rotateSphere 20s infinite linear;
+            /* Xoay toàn bộ trục không gian quả cầu liên tục */
+            animation: rotateSphere 25s infinite linear;
         }
         
-        /* Định dạng các thẻ ảnh tạo thành mảnh ghép liền mạch */
+        /* Cấu trúc thẻ chứa ảnh tạo viền bo tròn mềm mại */
         .img-card {
             position: absolute;
-            width: 110px; /* Tăng kích thước bề ngang để ảnh khít sát vào nhau */
-            height: 145px;
-            left: -55px;
-            top: -72px;
+            width: 95px;
+            height: 130px;
+            left: -47px;
+            top: -65px;
+            border: 2px solid rgba(255, 51, 153, 0.7);
+            border-radius: 12px; /* Bo tròn mạnh các góc của khung ảnh */
             overflow: hidden;
+            box-shadow: 0 0 20px rgba(255, 51, 153, 0.5);
             background: #111;
             transform-origin: center center;
             backface-visibility: visible;
-            /* Tạo màng lọc ánh sáng mờ nhẹ ở các góc rìa quả cầu giống như video */
-            border: 0.5px solid rgba(255, 255, 255, 0.1); 
         }
         .img-card img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             display: block;
+            border-radius: 10px; /* Bo tròn ruột ảnh bên trong */
         }
         
         @keyframes rotateSphere {
-            0% { transform: rotateX(8deg) rotateY(0deg); }
-            100% { transform: rotateX(8deg) rotateY(360deg); }
+            0% { transform: rotateX(10deg) rotateY(0deg); }
+            100% { transform: rotateX(10deg) rotateY(360deg); }
         }
         .next-btn {
             position: absolute;
@@ -236,10 +243,6 @@
                 <div class="img-card"><img src="anh2.jpg" alt="love"></div>
                 <div class="img-card"><img src="anh3.jpg" alt="love"></div>
                 <div class="img-card"><img src="anh4.jpg" alt="love"></div>
-                <div class="img-card"><img src="anh5.jpg" alt="love"></div>
-                <div class="img-card"><img src="anh6.jpg" alt="love"></div>
-                <div class="img-card"><img src="anh7.jpg" alt="love"></div>
-                <div class="img-card"><img src="anh8.jpg" alt="love"></div>
             </div>
         </div>
         <button class="next-btn" onclick="goToLetter()">Bấm vào đây tiếp nè</button>
@@ -274,7 +277,7 @@
             startTyping();
         }
 
-        /* --- CANVAS HẠT ÁNH SÁNG --- */
+        /* --- XỬ LÝ CANVAS HẠT ÁNH SÁNG --- */
         const canvas = document.getElementById('particleCanvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
@@ -336,22 +339,22 @@
             requestAnimationFrame(animateParticles);
         }
 
-        /* --- THUẬT TOÁN ĐẶC BIỆT: ÉP GÓC ĐỂ UỐN BÊN NGOÀI MẶT CẦU KHÍT NHAU --- */
+        /* --- THUẬT TOÁN ĐẨY ẢNH RA PHÍA NGOÀI ĐỂ TẠO KHỐI HÌNH CẦU TRÒN --- */
         function buildSphere() {
             const cards = document.querySelectorAll('.img-card');
             const total = cards.length;
-            const radius = 200; // Bán kính khối ôm sát tạo cầu tròn
+            const radius = 230; // Tăng bán kính đẩy các bức ảnh dạt đều ra rìa để tạo độ vòm cung tròn rộng
             
             cards.forEach((card, index) => {
-                // Phân phối tọa độ xoắn cực theo chuỗi Fibonacci đều đặn
+                // Phân bổ các điểm tọa độ cầu đều theo thuật toán xoắn ốc Fibonacci
                 const phi = Math.acos(-1 + (2 * index) / total);
                 const theta = Math.sqrt(total * Math.PI) * phi;
                 
                 const rotateYDeg = theta * (180 / Math.PI);
                 const rotateXDeg = (phi * (180 / Math.PI)) - 90;
                 
-                // SỬ DỤNG PHÉP BIẾN ĐỔI CHỒNG LÊN NHAU ĐỂ TẠO HIỆU ỨNG THẤU KÍNH LỒI KHÔNG VIỀN ĐEN GÓC
-                card.style.transform = `rotateY(${rotateYDeg}deg) rotateX(${-rotateXDeg}deg) translateZ(${radius}px) scale(1.05)`;
+                // Chuỗi transform định hướng lại vector mặt phẳng hướng tâm, uốn bo ôm lấy hình cầu
+                card.style.transform = `rotateY(${rotateYDeg}deg) rotateX(${-rotateXDeg}deg) translateZ(${radius}px)`;
             });
         }
 
