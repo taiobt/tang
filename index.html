@@ -37,7 +37,67 @@
             transform: scale(0.9);
         }
         
-        /* --- MÀN HÌNH 1: KHÓA TIM HỒNG --- */
+        /* --- MÀN HÌNH 1: TRÁI TIM HỒNG CHẠM KÍCH HOẠT --- */
+        #screen1 {
+            background: radial-gradient(circle, #ff2a85 0%, #3a001c 100%);
+            flex-direction: column;
+        }
+        .heart-btn {
+            width: 150px;
+            height: 150px;
+            background: #ff007f;
+            position: relative;
+            transform: rotate(-45deg);
+            box-shadow: 0 0 30px #ff007f;
+            cursor: pointer;
+            animation: pulse 1.2s infinite;
+        }
+        .heart-btn:before, .heart-btn:after {
+            content: "";
+            width: 150px;
+            height: 150px;
+            background: #ff007f;
+            border-radius: 50%;
+  <!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dear Gift - Sphere Glass 3D</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #050505;
+            font-family: 'Arial', sans-serif;
+            color: #fff;
+            user-select: none;
+        }
+
+        /* --- MÀN HÌNH CHUNG --- */
+        .screen {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1s ease, transform 1s ease;
+            z-index: 1;
+        }
+        .hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.9);
+        }
+        
+        /* --- MÀN HÌNH 1: TRÁI TIM HỒNG CHẠM KÍCH HOẠT --- */
         #screen1 {
             background: radial-gradient(circle, #ff2a85 0%, #3a001c 100%);
             flex-direction: column;
@@ -76,7 +136,7 @@
             text-shadow: 0 0 10px #fff;
         }
 
-        /* --- MÀN HÌNH 2: CANVAS HẠT ÁNH SÁNG & CHỮ --- */
+        /* --- MÀN HÌNH 2: CANVAS HẠT ÁNH SÁNG BAO CHÙM & TỤ CHỮ --- */
         #screen2 canvas {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -86,20 +146,25 @@
             text-align: center;
             font-weight: bold;
             color: #ff3399;
-            text-shadow: 0 0 20px #ff3399, 0 0 40px #ff0066;
+            text-shadow: 0 0 25px #ff3399, 0 0 50px #ff0066;
             font-size: 3.5rem;
             opacity: 0;
-            transition: opacity 1.5s ease;
+            transition: opacity 1.5s ease, transform 1.5s ease;
+            transform: scale(0.85);
             pointer-events: none;
-            width: 80%;
-            max-width: 600px;
+            width: 85%;
+            max-width: 650px;
+        }
+        .text-overlay.show {
+            opacity: 1;
+            transform: scale(1);
         }
 
-        /* --- MÀN HÌNH 3: QUẢ CẦU GLASS 3D XOAY VUỐT TỰ DO --- */
+        /* --- MÀN HÌNH 3: QUẢ CẦU GLASS 3D --- */
         #screen3 {
             background: radial-gradient(circle, #1a0010 0%, #000000 100%);
             flex-direction: column;
-            perspective: 1200px; /* Góc nhìn 3D có chiều sâu */
+            perspective: 1200px;
         }
         .sphere-wrapper {
             width: 100%;
@@ -109,21 +174,18 @@
             align-items: center;
             position: relative;
         }
-        /* Khung quả cầu */
         .sphere {
             width: 350px;
             height: 350px;
             position: relative;
             transform-style: preserve-3d;
         }
-        /* Định dạng các tấm ảnh trong cầu */
         .sphere img {
             position: absolute;
             width: 90px;
             height: 90px;
             border-radius: 12px;
             object-fit: cover;
-            /* Căn giữa chuẩn xác vào tâm hệ tọa độ quả cầu */
             left: 50%;
             top: 50%;
             margin-left: -45px;
@@ -133,7 +195,6 @@
             border: 1px solid rgba(255, 51, 153, 0.6);
             pointer-events: none;
         }
-        /* Lớp kính thủy tinh bao bọc lồi ra ngoài */
         .glass {
             position: absolute;
             width: 350px;
@@ -144,7 +205,7 @@
             box-shadow:
                 inset 0 0 40px rgba(255, 255, 255, 0.2),
                 0 0 60px rgba(255, 51, 153, 0.1);
-            pointer-events: none; /* Cho phép vuốt xuyên qua lớp kính vào ảnh */
+            pointer-events: none;
         }
         .next-btn {
             position: absolute;
@@ -166,43 +227,104 @@
             box-shadow: 0 0 25px #ff3399;
         }
 
-        /* --- MÀN HÌNH 4: BỨC THƯ TỎ TÌNH --- */
+        /* --- MÀN HÌNH 4: LÁ THƯ MỞ RA 3D --- */
         #screen4 {
-            background: #000;
+            background: radial-gradient(circle, #200012 0%, #000000 100%);
+            perspective: 1500px;
         }
-        .letter-box {
-            background: rgba(20, 20, 20, 0.95);
-            border: 1px solid #ff3399;
-            padding: 40px;
-            border-radius: 15px;
-            max-width: 500px;
-            width: 90%;
-            box-shadow: 0 0 30px rgba(255, 51, 153, 0.2);
-            text-align: center;
+        .envelope-container {
             position: relative;
+            width: 450px;
+            height: 300px;
+            background: #ff52a0;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+            transform-style: preserve-3d;
+            margin-top: 50px;
+            transition: transform 1s ease;
         }
-        .letter-box h2 {
-            color: #ff3399;
-            margin-bottom: 10px;
-            font-size: 1.6rem;
+        .envelope-container::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 0; height: 0;
+            border-left: 225px solid #ff71b3;
+            border-right: 225px solid #ff71b3;
+            border-top: 150px solid transparent;
+            border-bottom: 150px solid #ff71b3;
+            border-radius: 0 0 10px 10px;
+            z-index: 4;
         }
-        .letter-box p {
-            font-size: 1.1rem;
+        .envelope-flap {
+            position: absolute;
+            top: 0; left: 0; width: 0; height: 0;
+            border-left: 225px solid transparent;
+            border-right: 225px solid transparent;
+            border-top: 150px solid #ff3b93;
+            transform-origin: top;
+            z-index: 5;
+            transition: transform 0.8s ease-in-out;
+        }
+        .envelope-container.open .envelope-flap {
+            transform: rotateX(180deg);
+            z-index: 1;
+        }
+        .letter-paper {
+            position: absolute;
+            bottom: 10px;
+            left: 25px;
+            width: 400px;
+            height: 280px;
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            z-index: 2;
+            transition: transform 1s ease-in-out, height 1s ease-in-out;
+            transform: translateY(0);
+            overflow: hidden;
+        }
+        .envelope-container.open .letter-paper {
+            transform: translateY(-240px);
+            height: 480px;
+            z-index: 3;
+            box-shadow: 0 -10px 30px rgba(255, 51, 153, 0.3);
+        }
+        .letter-content {
+            color: #2b2b2b;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        .envelope-container.open .letter-content {
+            opacity: 1;
+        }
+        .letter-content h2 {
+            color: #d61c77;
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+            text-align: center;
+            border-bottom: 1px dashed #ffb3d1;
+            padding-bottom: 8px;
+        }
+        .letter-content h3 {
+            color: #666;
+            font-size: 1rem;
+            font-weight: normal;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .letter-content p {
+            font-size: 1.05rem;
             line-height: 1.6;
-            color: #e0e0e0;
-            margin-top: 15px;
+            color: #333;
             white-space: pre-line;
             text-align: left;
         }
-        .decor-heart {
+        .letter-decor {
             position: absolute;
-            color: #ff3399;
-            font-size: 1.5rem;
-            animation: float 3s infinite ease-in-out;
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+            font-size: 1.3rem;
+            bottom: 20px;
+            right: 20px;
         }
     </style>
 </head>
@@ -227,35 +349,36 @@
     </div>
 
     <div class="screen hidden" id="screen4">
-        <div class="letter-box">
-            <span class="decor-heart" style="top: 15px; left: 20px;">🦋</span>
-            <span class="decor-heart" style="top: 15px; right: 20px;">🦋</span>
-            <h2>Hôm nay: 01-06-2026</h2>
-            <h3 style="color: #ff3399; font-weight: normal;">Là ngày "Quốc tế thiếu nhi"</h3>
-            <p id="typingText"></p>
+        <div class="envelope-container" id="envelope">
+            <div class="envelope-flap"></div>
+            <div class="letter-paper">
+                <div class="letter-content">
+                    <h2>Hôm nay: 01-06-2026</h2>
+                    <h3>Là ngày "Quốc tế thiếu nhi"</h3>
+                    <p id="typingText"></p>
+                    <div class="letter-decor">❤️</div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        // Mảng chứa danh sách 8 ảnh thực tế của bạn trên Github
         const baseImages = [
             'anh1.jpg', 'anh2.jpg', 'anh3.jpg', 'anh4.jpg',
             'anh5.jpg', 'anh6.jpg', 'anh7.jpg', 'anh8.jpg'
         ];
 
-        // Tự động lặp lại mảng ảnh để đạt tổng số 25 tấm ảnh lấp đầy khối cầu
         const images = [];
         for (let i = 0; i < 25; i++) {
             images.push(baseImages[i % baseImages.length]);
         }
 
         const sphere = document.getElementById("sphere");
-        const radius = 145; // Bán kính phân bổ ảnh
+        const radius = 145;
         const total = images.length;
 
-        // Trạng thái điều hướng xoay cầu
         let rotX = 0, rotY = 0;
-        let vX = 0, vY = 0; // Vận tốc quán tính tự động quay
+        let vX = 0, vY = 0;
         let dragging = false;
         let lastX, lastY;
 
@@ -274,16 +397,19 @@
         function goToLetter() {
             document.getElementById('screen3').classList.add('hidden');
             document.getElementById('screen4').classList.remove('hidden');
-            startTyping();
+            
+            setTimeout(() => {
+                const envelope = document.getElementById('envelope');
+                envelope.classList.add('open');
+                setTimeout(startTyping, 1200);
+            }, 600);
         }
 
-        /* --- TẠO VÀ PHÂN BỔ ẢNH LÊN MẶT CẦU --- */
         function buildSphere() {
             images.forEach((src, i) => {
                 const img = document.createElement("img");
                 img.src = src;
 
-                // Thuật toán ma trận phân bổ hình cầu Fibonacci đều đặn
                 const phi = Math.acos(-1 + (2 * i) / total);
                 const theta = Math.sqrt(total * Math.PI) * phi;
 
@@ -291,7 +417,6 @@
                 const y = radius * Math.sin(theta) * Math.sin(phi);
                 const z = radius * Math.cos(phi);
 
-                // Lưu tọa độ gốc vào thuộc tính dữ liệu
                 img.dataset.x = x;
                 img.dataset.y = y;
                 img.dataset.z = z;
@@ -299,13 +424,10 @@
                 sphere.appendChild(img);
             });
             
-            // Đặt vận tốc xoay mặc định ban đầu giúp quả cầu tự chuyển động nhẹ trước khi vuốt
             vY = 0.4;
             animateSphere();
         }
 
-        /* --- XỬ LÝ SỰ KIỆN VUỐT XOAY (CHUỘT & MÀN HÌNH CẢM ỨNG) --- */
-        // Sự kiện chuột (PC)
         document.addEventListener("mousedown", e => {
             if(document.getElementById('screen3').classList.contains('hidden')) return;
             dragging = true;
@@ -323,7 +445,6 @@
             lastY = e.clientY;
         });
 
-        // Sự kiện cảm ứng (Điện thoại Mobile)
         document.addEventListener("touchstart", e => {
             if(document.getElementById('screen3').classList.contains('hidden')) return;
             dragging = true;
@@ -341,16 +462,13 @@
             lastY = e.touches[0].clientY;
         });
 
-        /* --- ĐỘNG HỌA QUẢ CẦU XOAY VÀ SCALE CHIỀU SÂU --- */
         function animateSphere() {
             rotX += vX;
             rotY += vY;
 
-            // Giảm dần vận tốc (Hiệu ứng quán tính mượt mà)
             if (!dragging) {
                 vX *= 0.95;
                 vY *= 0.95;
-                // Duy trì chuyển động xoay ngang tự động siêu nhẹ khi không chạm
                 rotY += 0.05; 
             } else {
                 vX *= 0.85;
@@ -364,26 +482,20 @@
                 let y = img.dataset.y;
                 let z = img.dataset.z;
 
-                // Chuỗi xoay và đẩy 3D theo góc quay hiện tại
                 let transform = `rotateX(${rotX}deg) rotateY(${rotY}deg) translate3d(${x}px, ${y}px, ${z}px)`;
 
-                // Tính toán tỷ lệ phóng to thu nhỏ căn cứ theo chiều sâu trục Z
                 let scale = (parseFloat(z) + radius) / (2 * radius);
                 transform += ` scale(${0.55 + scale * 0.9})`;
 
                 img.style.transform = transform;
-
-                // Điều chỉnh độ sáng tối dựa trên vị trí trước/sau quả cầu
                 img.style.filter = `brightness(${0.5 + scale * 0.7})`;
-                
-                // Điều chỉnh thứ tự hiển thị layer (ảnh phía trước đè lên ảnh phía sau)
                 img.style.zIndex = Math.round(parseFloat(z) + radius);
             }
 
             requestAnimationFrame(animateSphere);
         }
 
-        /* --- XỬ LÝ CANVAS HẠT ÁNH SÁNG MÀN HÌNH 2 --- */
+        /* --- XỬ LÝ CANVAS HẠT ÁNH SÁNG BAO CHÙM TOÀN DIỆN MÀN HÌNH --- */
         const canvas = document.getElementById('particleCanvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
@@ -392,23 +504,29 @@
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
             
-            for (let i = 0; i < 350; i++) {
+            for (let i = 0; i < 400; i++) {
                 particles.push({
                     x: Math.random() * canvas.width,
                     y: Math.random() * canvas.height,
-                    originX: canvas.width / 2 + (Math.random() - 0.5) * 150,
-                    originY: canvas.height / 2 + (Math.random() - 0.5) * 150,
-                    size: Math.random() * 2.5 + 0.5,
-                    color: `hsl(${Math.random() * 40 + 320}, 100%, 65%)`,
-                    speedX: (Math.random() - 0.5) * 1.5,
-                    speedY: (Math.random() - 0.5) * 1.5,
+                    originX: canvas.width / 2 + (Math.random() - 0.5) * 200,
+                    originY: canvas.height / 2 + (Math.random() - 0.5) * 80,
+                    size: Math.random() * 3 + 0.5,
+                    color: `hsl(${Math.random() * 50 + 310}, 100%, 70%)`, 
+                    speedX: (Math.random() - 0.5) * 2.5, 
+                    speedY: (Math.random() - 0.5) * 2.5,
                     gathering: false
                 });
             }
             animateParticles();
 
-            setTimeout(() => { particles.forEach(p => p.gathering = true); }, 2500);
-            setTimeout(() => { document.getElementById('textOverlay').style.opacity = '1'; }, 4000);
+            setTimeout(() => { 
+                particles.forEach(p => p.gathering = true); 
+            }, 2500);
+
+            setTimeout(() => { 
+                document.getElementById('textOverlay').classList.add('show'); 
+            }, 4000);
+
             setTimeout(goToSphere, 7500);
         }
 
@@ -420,8 +538,8 @@
                     if (p.x < 0 || p.x > canvas.width) p.speedX *= -1;
                     if (p.y < 0 || p.y > canvas.height) p.speedY *= -1;
                 } else {
-                    p.x += (p.originX - p.x) * 0.05;
-                    p.y += (p.originY - p.y) * 0.05;
+                    p.x += (p.originX - p.x) * 0.04;
+                    p.y += (p.originY - p.y) * 0.04;
                 }
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
@@ -431,7 +549,7 @@
             requestAnimationFrame(animateParticles);
         }
 
-        /* --- HIỆU ỨNG GÕ CHỮ MÀN HÌNH 4 --- */
+        /* --- NỘI DUNG CHỮ CHẠY MÀN HÌNH CUỐI --- */
         const contentMessage = `Chúc bạn nhỏ của tui mau ăn chóng lớn và ngoan ngoãn nhé. Luôn vui vẻ, nở nụ cười trên môi và đặc biệt là không được tiêu cực ạ.\n\nChúc bạn nhỏ ngày càng xinh xắn, dễ thương, mong bạn có tất cả cả vũ trụ va vào.\n\nThương bạn nhỏ của tui nhiều lắm... ❤️`;
         let textIndex = 0;
 
@@ -443,11 +561,6 @@
                 setTimeout(startTyping, 50);
             }
         }
-
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        });
     </script>
 </body>
 </html>
