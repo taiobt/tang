@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dear Gift - Sphere Glass 3D</title>
+    <title>Quà Tặng Quả Cầu Cong 3D</title>
     <style>
         * {
             box-sizing: border-box;
@@ -17,10 +17,9 @@
             background-color: #050505;
             font-family: 'Arial', sans-serif;
             color: #fff;
-            user-select: none;
         }
 
-        /* --- MÀN HÌNH CHUNG --- */
+        /* --- MÀN HÌNH 1: KHÓA TIM HỒNG --- */
         .screen {
             position: absolute;
             width: 100%;
@@ -37,84 +36,70 @@
             transform: scale(0.9);
         }
         
-        /* --- MÀN HÌNH 1: NÚM TRÒN CHẠM KÍCH HOẠT --- */
         #screen1 {
-            background: radial-gradient(circle, #3a001c 0%, #050505 100%);
+            background: radial-gradient(circle, #ff2a85 0%, #3a001c 100%);
             flex-direction: column;
         }
-        /* Tạo hình núm tròn 3D lấp lánh */
-        .circle-btn {
-            width: 130px;
-            height: 130px;
-            background: radial-gradient(circle, #ff52a0 0%, #ff007f 100%);
-            border-radius: 50%;
-            cursor: pointer;
+        .heart-btn {
+            width: 150px;
+            height: 150px;
+            background: #ff007f;
             position: relative;
-            box-shadow: 0 0 30px rgba(255, 0, 127, 0.6), inset 0 0 15px rgba(255, 255, 255, 0.4);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.5rem;
+            transform: rotate(-45deg);
+            box-shadow: 0 0 30px #ff007f;
+            cursor: pointer;
+            animation: pulse 1.2s infinite;
         }
-        /* Tạo hiệu ứng vòng sóng lan tỏa (Ripple Effect) xung quanh núm tròn */
-        .circle-btn::before {
+        .heart-btn:before, .heart-btn:after {
             content: "";
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border: 2px solid #ff007f;
+            width: 150px;
+            height: 150px;
+            background: #ff007f;
             border-radius: 50%;
-            animation: ripple 1.8s infinite linear;
-            opacity: 0;
+            position: absolute;
         }
-        @keyframes ripple {
-            0% { transform: scale(1); opacity: 0.8; }
-            100% { transform: scale(1.6); opacity: 0; }
+        .heart-btn:before { top: -75px; left: 0; }
+        .heart-btn:after { left: 75px; top: 0; }
+        
+        @keyframes pulse {
+            0% { transform: rotate(-45deg) scale(1); }
+            50% { transform: rotate(-45deg) scale(1.1); box-shadow: 0 0 50px #ff007f; }
+            100% { transform: rotate(-45deg) scale(1); }
         }
         .hint-text {
-            margin-top: 40px;
-            font-size: 1.1rem;
-            letter-spacing: 3px;
+            margin-top: 100px;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
             text-transform: uppercase;
-            text-shadow: 0 0 10px #ff3399;
-            color: #ff71b3;
-            animation: blink 1.5s infinite ease-in-out;
-        }
-        @keyframes blink {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; text-shadow: 0 0 20px #ff3399; }
+            text-shadow: 0 0 10px #fff;
         }
 
-        /* --- MÀN HÌNH 2: CANVAS HẠT ÁNH SÁNG BAO TRÙM & TỤ CHỮ --- */
+        /* --- MÀN HÌNH 2: CANVAS HẠT ÁNH SÁNG & CHỮ --- */
         #screen2 canvas {
             position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
         }
         .text-overlay {
             position: absolute;
             text-align: center;
             font-weight: bold;
             color: #ff3399;
-            text-shadow: 0 0 25px #ff3399, 0 0 50px #ff0066;
+            text-shadow: 0 0 20px #ff3399, 0 0 40px #ff0066;
             font-size: 3.5rem;
             opacity: 0;
-            transition: opacity 1.5s ease, transform 1.5s ease;
-            transform: scale(0.85);
+            transition: opacity 1.5s ease;
             pointer-events: none;
-            width: 85%;
-            max-width: 650px;
-        }
-        .text-overlay.show {
-            opacity: 1;
-            transform: scale(1);
+            width: 80%;
+            max-width: 600px;
         }
 
-        /* --- MÀN HÌNH 3: QUẢ CẦU GLASS 3D --- */
+        /* --- MÀN HÌNH 3: QUẢ CẦU CONG TRÒN 3D --- */
         #screen3 {
             background: radial-gradient(circle, #1a0010 0%, #000000 100%);
             flex-direction: column;
-            perspective: 1200px;
         }
         .sphere-wrapper {
             width: 100%;
@@ -122,44 +107,44 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            position: relative;
+            perspective: 800px; /* Thu hẹp góc nhìn để tạo hiệu ứng thấu kính hội tụ cong lồi */
         }
-        .sphere {
-            width: 350px;
-            height: 350px;
+        .sphere-container {
+            width: 0px;
+            height: 0px;
             position: relative;
             transform-style: preserve-3d;
+            animation: rotateSphere 20s infinite linear;
         }
-        .sphere img {
+        
+        /* Định dạng các thẻ ảnh tạo thành mảnh ghép liền mạch */
+        .img-card {
             position: absolute;
-            width: 90px;
-            height: 90px;
-            border-radius: 12px;
+            width: 110px; /* Tăng kích thước bề ngang để ảnh khít sát vào nhau */
+            height: 145px;
+            left: -55px;
+            top: -72px;
+            overflow: hidden;
+            background: #111;
+            transform-origin: center center;
+            backface-visibility: visible;
+            /* Tạo màng lọc ánh sáng mờ nhẹ ở các góc rìa quả cầu giống như video */
+            border: 0.5px solid rgba(255, 255, 255, 0.1); 
+        }
+        .img-card img {
+            width: 100%;
+            height: 100%;
             object-fit: cover;
-            left: 50%;
-            top: 50%;
-            margin-left: -45px;
-            margin-top: -45px;
-            transform-origin: center;
-            box-shadow: 0 0 15px rgba(255, 51, 153, 0.4);
-            border: 1px solid rgba(255, 51, 153, 0.6);
-            pointer-events: none;
+            display: block;
         }
-        .glass {
-            position: absolute;
-            width: 350px;
-            height: 350px;
-            border-radius: 50%;
-            backdrop-filter: blur(4px) brightness(1.1);
-            background: rgba(255, 255, 255, 0.03);
-            box-shadow:
-                inset 0 0 40px rgba(255, 255, 255, 0.2),
-                0 0 60px rgba(255, 51, 153, 0.1);
-            pointer-events: none;
+        
+        @keyframes rotateSphere {
+            0% { transform: rotateX(8deg) rotateY(0deg); }
+            100% { transform: rotateX(8deg) rotateY(360deg); }
         }
         .next-btn {
             position: absolute;
-            bottom: 45px;
+            bottom: 40px;
             padding: 12px 35px;
             background: transparent;
             border: 2px solid #ff3399;
@@ -177,112 +162,50 @@
             box-shadow: 0 0 25px #ff3399;
         }
 
-        /* --- MÀN HÌNH 4: LÁ THƯ MỞ RA 3D --- */
+        /* --- MÀN HÌNH 4: BỨC THƯ TỎ TÌNH --- */
         #screen4 {
-            background: radial-gradient(circle, #200012 0%, #000000 100%);
-            perspective: 1500px;
+            background: #000;
         }
-        .envelope-container {
+        .letter-box {
+            background: rgba(20, 20, 20, 0.9);
+            border: 1px solid #ff3399;
+            padding: 40px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 0 30px rgba(255, 51, 153, 0.2);
+            text-align: center;
             position: relative;
-            width: 450px;
-            height: 300px;
-            background: #ff52a0;
-            border-radius: 0 0 10px 10px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
-            transform-style: preserve-3d;
-            margin-top: 50px;
-            transition: transform 1s ease;
         }
-        .envelope-container::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; width: 0; height: 0;
-            border-left: 225px solid #ff71b3;
-            border-right: 225px solid #ff71b3;
-            border-top: 150px solid transparent;
-            border-bottom: 150px solid #ff71b3;
-            border-radius: 0 0 10px 10px;
-            z-index: 4;
+        .letter-box h2 {
+            color: #ff3399;
+            margin-bottom: 10px;
+            font-size: 1.6rem;
         }
-        .envelope-flap {
-            position: absolute;
-            top: 0; left: 0; width: 0; height: 0;
-            border-left: 225px solid transparent;
-            border-right: 225px solid transparent;
-            border-top: 150px solid #ff3b93;
-            transform-origin: top;
-            z-index: 5;
-            transition: transform 0.8s ease-in-out;
-        }
-        .envelope-container.open .envelope-flap {
-            transform: rotateX(180deg);
-            z-index: 1;
-        }
-        .letter-paper {
-            position: absolute;
-            bottom: 10px;
-            left: 25px;
-            width: 400px;
-            height: 280px;
-            background: #ffffff;
-            border-radius: 8px;
-            padding: 30px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.2);
-            z-index: 2;
-            transition: transform 1s ease-in-out, height 1s ease-in-out;
-            transform: translateY(0);
-            overflow: hidden;
-        }
-        .envelope-container.open .letter-paper {
-            transform: translateY(-240px);
-            height: 480px;
-            z-index: 3;
-            box-shadow: 0 -10px 30px rgba(255, 51, 153, 0.3);
-        }
-        .letter-content {
-            color: #2b2b2b;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-        .envelope-container.open .letter-content {
-            opacity: 1;
-        }
-        .letter-content h2 {
-            color: #d61c77;
-            font-size: 1.5rem;
-            margin-bottom: 5px;
-            text-align: center;
-            border-bottom: 1px dashed #ffb3d1;
-            padding-bottom: 8px;
-        }
-        .letter-content h3 {
-            color: #666;
-            font-size: 1rem;
-            font-weight: normal;
-            text-align: center;
-            margin-bottom: 15px;
-        }
-        .letter-content p {
-            font-size: 1.05rem;
+        .letter-box p {
+            font-size: 1.1rem;
             line-height: 1.6;
-            color: #333;
+            color: #e0e0e0;
+            margin-top: 15px;
             white-space: pre-line;
-            text-align: left;
         }
-        .letter-decor {
+        .decor-heart {
             position: absolute;
-            font-size: 1.3rem;
-            bottom: 20px;
-            right: 20px;
+            color: #ff3399;
+            font-size: 1.5rem;
+            animation: float 3s infinite ease-in-out;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
     </style>
 </head>
 <body>
 
     <div class="screen" id="screen1">
-        <div class="circle-btn" onclick="startGift()">✨</div>
-        <div class="hint-text">Chạm vào núm tròn đi nè</div>
+        <div class="heart-btn" onclick="startGift()"></div>
+        <div class="hint-text">Chạm vào đây đi</div>
     </div>
 
     <div class="screen hidden" id="screen2">
@@ -292,46 +215,47 @@
 
     <div class="screen hidden" id="screen3">
         <div class="sphere-wrapper">
-            <div class="sphere" id="sphere"></div>
-            <div class="glass"></div>
+            <div class="sphere-container" id="sphere">
+                <div class="img-card"><img src="anh1.jpg" alt="love"></div>
+                <div class="img-card"><img src="anh2.jpg" alt="love"></div>
+                <div class="img-card"><img src="anh3.jpg" alt="love"></div>
+                <div class="img-card"><img src="anh4.jpg" alt="love"></div>
+                <div class="img-card"><img src="anh5.jpg" alt="love"></div>
+                <div class="img-card"><img src="anh6.jpg" alt="love"></div>
+                <div class="img-card"><img src="anh7.jpg" alt="love"></div>
+                <div class="img-card"><img src="anh8.jpg" alt="love"></div>
+                <div class="img-card"><img src="anh1.jpg" alt="love"></div>
+                <div class="img-card"><img src="anh2.jpg" alt="love"></div>
+                <div class="img-card"><img src="anh3.jpg" alt="love"></div>
+                <div class="img-card"><img src="anh4.jpg" alt="love"></div>
+                <div class="img-card"><img src="anh5.jpg" alt="love"></div>
+                <div class="img-card"><img src="anh6.jpg" alt="love"></div>
+                <div class="img-card"><img src="anh7.jpg" alt="love"></div>
+                <div class="img-card"><img src="anh8.jpg" alt="love"></div>
+                <div class="img-card"><img src="anh1.jpg" alt="love"></div>
+                <div class="img-card"><img src="anh2.jpg" alt="love"></div>
+                <div class="img-card"><img src="anh3.jpg" alt="love"></div>
+                <div class="img-card"><img src="anh4.jpg" alt="love"></div>
+                <div class="img-card"><img src="anh5.jpg" alt="love"></div>
+                <div class="img-card"><img src="anh6.jpg" alt="love"></div>
+                <div class="img-card"><img src="anh7.jpg" alt="love"></div>
+                <div class="img-card"><img src="anh8.jpg" alt="love"></div>
+            </div>
         </div>
         <button class="next-btn" onclick="goToLetter()">Bấm vào đây tiếp nè</button>
     </div>
 
     <div class="screen hidden" id="screen4">
-        <div class="envelope-container" id="envelope">
-            <div class="envelope-flap"></div>
-            <div class="letter-paper">
-                <div class="letter-content">
-                    <h2>Hôm nay: 01-06-2026</h2>
-                    <h3>Là ngày "Quốc tế thiếu nhi"</h3>
-                    <p id="typingText"></p>
-                    <div class="letter-decor">❤️</div>
-                </div>
-            </div>
+        <div class="letter-box">
+            <span class="decor-heart" style="top: 15px; left: 20px;">🦋</span>
+            <span class="decor-heart" style="top: 15px; right: 20px;">🦋</span>
+            <h2>Hôm nay: 01-06-2026</h2>
+            <h3 style="color: #ff3399; font-weight: normal;">Là ngày "Quốc tế thiếu nhi"</h3>
+            <p id="typingText"></p>
         </div>
     </div>
 
     <script>
-        const baseImages = [
-            'anh1.jpg', 'anh2.jpg', 'anh3.jpg', 'anh4.jpg',
-            'anh5.jpg', 'anh6.jpg', 'anh7.jpg', 'anh8.jpg'
-        ];
-
-        const images = [];
-        for (let i = 0; i < 25; i++) {
-            images.push(baseImages[i % baseImages.length]);
-        }
-
-        const sphere = document.getElementById("sphere");
-        const radius = 145;
-        const total = images.length;
-
-        let rotX = 0, rotY = 0;
-        let vX = 0, vY = 0;
-        let dragging = false;
-        let lastX, lastY;
-
         function startGift() {
             document.getElementById('screen1').classList.add('hidden');
             document.getElementById('screen2').classList.remove('hidden');
@@ -347,105 +271,10 @@
         function goToLetter() {
             document.getElementById('screen3').classList.add('hidden');
             document.getElementById('screen4').classList.remove('hidden');
-            
-            setTimeout(() => {
-                const envelope = document.getElementById('envelope');
-                envelope.classList.add('open');
-                setTimeout(startTyping, 1200);
-            }, 600);
+            startTyping();
         }
 
-        function buildSphere() {
-            images.forEach((src, i) => {
-                const img = document.createElement("img");
-                img.src = src;
-
-                const phi = Math.acos(-1 + (2 * i) / total);
-                const theta = Math.sqrt(total * Math.PI) * phi;
-
-                const x = radius * Math.cos(theta) * Math.sin(phi);
-                const y = radius * Math.sin(theta) * Math.sin(phi);
-                const z = radius * Math.cos(phi);
-
-                img.dataset.x = x;
-                img.dataset.y = y;
-                img.dataset.z = z;
-
-                sphere.appendChild(img);
-            });
-            
-            vY = 0.4;
-            animateSphere();
-        }
-
-        document.addEventListener("mousedown", e => {
-            if(document.getElementById('screen3').classList.contains('hidden')) return;
-            dragging = true;
-            lastX = e.clientX;
-            lastY = e.clientY;
-        });
-        document.addEventListener("mouseup", () => dragging = false);
-        document.addEventListener("mousemove", e => {
-            if (!dragging) return;
-            let dx = e.clientX - lastX;
-            let dy = e.clientY - lastY;
-            vY = dx * 0.15;
-            vX = dy * 0.15;
-            lastX = e.clientX;
-            lastY = e.clientY;
-        });
-
-        document.addEventListener("touchstart", e => {
-            if(document.getElementById('screen3').classList.contains('hidden')) return;
-            dragging = true;
-            lastX = e.touches[0].clientX;
-            lastY = e.touches[0].clientY;
-        });
-        document.addEventListener("touchend", () => dragging = false);
-        document.addEventListener("touchmove", e => {
-            if (!dragging) return;
-            let dx = e.touches[0].clientX - lastX;
-            let dy = e.touches[0].clientY - lastY;
-            vY = dx * 0.15;
-            vX = dy * 0.15;
-            lastX = e.touches[0].clientX;
-            lastY = e.touches[0].clientY;
-        });
-
-        function animateSphere() {
-            rotX += vX;
-            rotY += vY;
-
-            if (!dragging) {
-                vX *= 0.95;
-                vY *= 0.95;
-                rotY += 0.05; 
-            } else {
-                vX *= 0.85;
-                vY *= 0.85;
-            }
-
-            const imgs = sphere.children;
-
-            for (let img of imgs) {
-                let x = img.dataset.x;
-                let y = img.dataset.y;
-                let z = img.dataset.z;
-
-                let transform = `rotateX(${rotX}deg) rotateY(${rotY}deg) translate3d(${x}px, ${y}px, ${z}px)`;
-
-                let scale = (parseFloat(z) + radius) / (2 * radius);
-                transform += ` scale(${0.55 + scale * 0.9})`;
-
-                img.style.transform = transform;
-                img.style.filter = `brightness(${0.5 + scale * 0.7})`;
-                img.style.zIndex = Math.round(parseFloat(z) + radius);
-            }
-
-            requestAnimationFrame(animateSphere);
-        }
-
-        /* --- XỬ LÝ CANVAS HẠT ÁNH SÁNG BAO CHÙM TOÀN DIỆN MÀN HÌNH --- */
+        /* --- CANVAS HẠT ÁNH SÁNG --- */
         const canvas = document.getElementById('particleCanvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
@@ -454,59 +283,79 @@
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
             
-            // Tạo 400 hạt ánh sáng bay bao phủ khắp màn hình ngay từ đầu
-            for (let i = 0; i < 400; i++) {
+            for (let i = 0; i < 350; i++) {
                 particles.push({
                     x: Math.random() * canvas.width,
                     y: Math.random() * canvas.height,
-                    // Tọa độ mục tiêu hội tụ nằm ở khu vực giữa màn hình nơi chữ xuất hiện
-                    originX: canvas.width / 2 + (Math.random() - 0.5) * 200,
-                    originY: canvas.height / 2 + (Math.random() - 0.5) * 80,
-                    size: Math.random() * 3 + 0.5,
-                    color: `hsl(${Math.random() * 50 + 310}, 100%, 70%)`, // Hạt sáng tone màu hồng/tím lấp lánh
-                    speedX: (Math.random() - 0.5) * 2.5, // Tốc độ bay tự do ban đầu rộng hơn
-                    speedY: (Math.random() - 0.5) * 2.5,
+                    originX: canvas.width / 2 + (Math.random() - 0.5) * 150,
+                    originY: canvas.height / 2 + (Math.random() - 0.5) * 150,
+                    size: Math.random() * 2.5 + 0.5,
+                    color: `hsl(${Math.random() * 40 + 320}, 100%, 65%)`,
+                    speedX: (Math.random() - 0.5) * 1.5,
+                    speedY: (Math.random() - 0.5) * 1.5,
                     gathering: false
                 });
             }
             animateParticles();
 
-            // Sau 2.5 giây, ra lệnh cho toàn bộ hạt ánh sáng đồng loạt hút quy tụ về tâm chữ
-            setTimeout(() => { 
-                particles.forEach(p => p.gathering = true); 
+            setTimeout(() => {
+                particles.forEach(p => p.gathering = true);
             }, 2500);
 
-            // Sau 4 giây, khi các hạt đã quy tụ lại đặc đặc ở giữa, kích hoạt hiển thị con chữ ra rực rỡ
-            setTimeout(() => { 
-                document.getElementById('textOverlay').classList.add('show'); 
+            setTimeout(() => {
+                document.getElementById('textOverlay').style.opacity = '1';
             }, 4000);
 
-            // Sau 7.5 giây, tự động chuyển tiếp sang màn hình Quả cầu Glass 3D
-            setTimeout(goToSphere, 7500);
+            setTimeout(() => {
+                goToSphere();
+            }, 7500);
         }
 
         function animateParticles() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
             particles.forEach(p => {
                 if (!p.gathering) {
-                    // Trạng thái 1: Hạt ánh sáng chuyển động tự do bao trùm khắp màn hình
-                    p.x += p.speedX; p.y += p.speedY;
+                    p.x += p.speedX;
+                    p.y += p.speedY;
                     if (p.x < 0 || p.x > canvas.width) p.speedX *= -1;
                     if (p.y < 0 || p.y > canvas.height) p.speedY *= -1;
                 } else {
-                    // Trạng thái 2: Hạt ánh sáng co cụm quy tụ dần thành khu vực chữ
-                    p.x += (p.originX - p.x) * 0.04;
-                    p.y += (p.originY - p.y) * 0.04;
+                    p.x += (p.originX - p.x) * 0.05;
+                    p.y += (p.originY - p.y) * 0.05;
                 }
+
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
                 ctx.fillStyle = p.color;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = p.color;
                 ctx.fill();
             });
+            
             requestAnimationFrame(animateParticles);
         }
 
-        /* --- NỘI DUNG CHỮ CHẠY MÀN HÌNH CUỐI --- */
+        /* --- THUẬT TOÁN ĐẶC BIỆT: ÉP GÓC ĐỂ UỐN BÊN NGOÀI MẶT CẦU KHÍT NHAU --- */
+        function buildSphere() {
+            const cards = document.querySelectorAll('.img-card');
+            const total = cards.length;
+            const radius = 200; // Bán kính khối ôm sát tạo cầu tròn
+            
+            cards.forEach((card, index) => {
+                // Phân phối tọa độ xoắn cực theo chuỗi Fibonacci đều đặn
+                const phi = Math.acos(-1 + (2 * index) / total);
+                const theta = Math.sqrt(total * Math.PI) * phi;
+                
+                const rotateYDeg = theta * (180 / Math.PI);
+                const rotateXDeg = (phi * (180 / Math.PI)) - 90;
+                
+                // SỬ DỤNG PHÉP BIẾN ĐỔI CHỒNG LÊN NHAU ĐỂ TẠO HIỆU ỨNG THẤU KÍNH LỒI KHÔNG VIỀN ĐEN GÓC
+                card.style.transform = `rotateY(${rotateYDeg}deg) rotateX(${-rotateXDeg}deg) translateZ(${radius}px) scale(1.05)`;
+            });
+        }
+
+        /* --- HIỆU ỨNG GÕ CHỮ --- */
         const contentMessage = `Chúc bạn nhỏ của tui mau ăn chóng lớn và ngoan ngoãn nhé. Luôn vui vẻ, nở nụ cười trên môi và đặc biệt là không được tiêu cực ạ.\n\nChúc bạn nhỏ ngày càng xinh xắn, dễ thương, mong bạn có tất cả cả vũ trụ va vào.\n\nThương bạn nhỏ của tui nhiều lắm... ❤️`;
         let textIndex = 0;
 
@@ -518,6 +367,11 @@
                 setTimeout(startTyping, 50);
             }
         }
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
     </script>
 </body>
 </html>
