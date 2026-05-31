@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dear Gift</title>
+    <title>Dear Gift 3D Sphere</title>
     <style>
         * {
             box-sizing: border-box;
@@ -96,42 +96,55 @@
             max-width: 600px;
         }
 
-        /* --- MÀN HÌNH 3: QUẢ CẦU 3D ẢNH --- */
+        /* --- MÀN HÌNH 3: QUẢ CẦU 3D ẢNH UỐN CONG --- */
         #screen3 {
-            perspective: 1000px;
             background: radial-gradient(circle, #1a0010 0%, #000000 100%);
+            flex-direction: column;
+        }
+        .sphere-wrapper {
+            width: 100%;
+            height: 75%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* Tạo chiều sâu perspective lớn hơn để thấy rõ độ cong vòng cung */
+            perspective: 1200px; 
         }
         .sphere-container {
-            width: 300px;
-            height: 300px;
+            width: 0px;
+            height: 0px;
             position: relative;
             transform-style: preserve-3d;
-            animation: rotateSphere 20s infinite linear;
+            animation: rotateSphere 25s infinite linear;
         }
         .img-card {
             position: absolute;
-            width: 80px;
-            height: 110px;
-            left: 110px;
-            top: 95px;
-            border: 2px solid #ff3399;
-            border-radius: 8px;
+            width: 85px;
+            height: 115px;
+            left: -42px;
+            top: -57px;
+            border: 1.5px solid rgba(255, 51, 153, 0.6);
+            border-radius: 6px;
             overflow: hidden;
-            box-shadow: 0 0 15px rgba(255, 51, 153, 0.5);
+            box-shadow: 0 0 15px rgba(255, 51, 153, 0.4);
+            background: #111;
+            /* Đảm bảo ảnh uốn cong mềm mại */
+            transform-origin: center center; 
             backface-visibility: visible;
         }
         .img-card img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            display: block;
         }
         @keyframes rotateSphere {
-            0% { transform: rotateY(0deg) rotateX(10deg); }
-            100% { transform: rotateY(360deg) rotateX(10deg); }
+            0% { transform: rotateX(6deg) rotateY(0deg); }
+            100% { transform: rotateX(6deg) rotateY(360deg); }
         }
         .next-btn {
             position: absolute;
-            bottom: 50px;
+            bottom: 40px;
             padding: 12px 35px;
             background: transparent;
             border: 2px solid #ff3399;
@@ -141,6 +154,7 @@
             font-size: 1rem;
             box-shadow: 0 0 15px rgba(255, 51, 153, 0.3);
             transition: 0.3s;
+            z-index: 10;
         }
         .next-btn:hover {
             background: #ff3399;
@@ -200,15 +214,25 @@
     </div>
 
     <div class="screen hidden" id="screen3">
-        <div class="sphere-container" id="sphere">
-            <div class="img-card"><img src="anh1.jpg" alt="love"></div>
-<div class="img-card"><img src="anh2.jpg" alt="love"></div>
-<div class="img-card"><img src="anh3.jpg" alt="love"></div>
-<div class="img-card"><img src="anh4.jpg" alt="love"></div>
-<div class="img-card"><img src="anh5.jpg" alt="love"></div>
-<div class="img-card"><img src="anh6.jpg" alt="love"></div>
-<div class="img-card"><img src="anh7.jpg" alt="love"></div>
-<div class="img-card"><img src="anh8.jpg" alt="love"></div>
+        <div class="sphere-wrapper">
+            <div class="sphere-container" id="sphere">
+                <div class="img-card"><img src="anh1.jpg" alt="love"></div>
+                <div class="img-card"><img src="anh2.jpg" alt="love"></div>
+                <div class="img-card"><img src="anh3.jpg" alt="love"></div>
+                <div class="img-card"><img src="anh4.jpg" alt="love"></div>
+                <div class="img-card"><img src="anh5.jpg" alt="love"></div>
+                <div class="img-card"><img src="anh6.jpg" alt="love"></div>
+                <div class="img-card"><img src="anh7.jpg" alt="love"></div>
+                <div class="img-card"><img src="anh8.jpg" alt="love"></div>
+                <div class="img-card"><img src="anh1.jpg" alt="love"></div>
+                <div class="img-card"><img src="anh2.jpg" alt="love"></div>
+                <div class="img-card"><img src="anh3.jpg" alt="love"></div>
+                <div class="img-card"><img src="anh4.jpg" alt="love"></div>
+                <div class="img-card"><img src="anh5.jpg" alt="love"></div>
+                <div class="img-card"><img src="anh6.jpg" alt="love"></div>
+                <div class="img-card"><img src="anh7.jpg" alt="love"></div>
+                <div class="img-card"><img src="anh8.jpg" alt="love"></div>
+            </div>
         </div>
         <button class="next-btn" onclick="goToLetter()">Bấm vào đây tiếp nè</button>
     </div>
@@ -224,7 +248,6 @@
     </div>
 
     <script>
-        // Chuyển màn hình
         function startGift() {
             document.getElementById('screen1').classList.add('hidden');
             document.getElementById('screen2').classList.remove('hidden');
@@ -243,7 +266,7 @@
             startTyping();
         }
 
-        /* --- XỬ LÝ CANVAS HẠT ÁNH SÁNG (MÀN HÌNH 2) --- */
+        /* --- XỬ LÝ CANVAS HẠT ÁNH SÁNG --- */
         const canvas = document.getElementById('particleCanvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
@@ -252,7 +275,6 @@
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
             
-            // Tạo 350 hạt lấp lánh hồng tím bay tự do
             for (let i = 0; i < 350; i++) {
                 particles.push({
                     x: Math.random() * canvas.width,
@@ -268,7 +290,6 @@
             }
             animateParticles();
 
-            // Cơ chế: Sau 2.5s hạt tụ lại giữa -> Sau 4s hiện chữ -> Sau 7.5s chuyển sang Quả cầu ảnh
             setTimeout(() => {
                 particles.forEach(p => p.gathering = true);
             }, 2500);
@@ -292,7 +313,6 @@
                     if (p.x < 0 || p.x > canvas.width) p.speedX *= -1;
                     if (p.y < 0 || p.y > canvas.height) p.speedY *= -1;
                 } else {
-                    // Hiệu ứng hút hạt vào tâm tạo điểm nhấn giống video
                     p.x += (p.originX - p.x) * 0.05;
                     p.y += (p.originY - p.y) * 0.05;
                 }
@@ -308,27 +328,27 @@
             requestAnimationFrame(animateParticles);
         }
 
-        /* --- TÍNH TOÁN QUẢ CẦU ẢNH 3D (MÀN HÌNH 3) --- */
+        /* --- THUẬT TOÁN TOÁN HỌC PHÂN BỔ ẢNH THEO HÌNH CẦU CONG TRÒN --- */
         function buildSphere() {
             const cards = document.querySelectorAll('.img-card');
             const total = cards.length;
+            const radius = 180; // Độ rộng vòng cung hình cầu
             
             cards.forEach((card, index) => {
-                // Phân bổ các bức ảnh đều theo hình cầu bằng công thức lượng giác toán học
+                // Phân bổ đều góc theo trục dọc và ngang bằng công thức Fibonacci Sphere
                 const phi = Math.acos(-1 + (2 * index) / total);
                 const theta = Math.sqrt(total * Math.PI) * phi;
                 
-                const radius = 140; // Độ rộng của vòng xoay quả cầu
+                // Chuyển đổi sang hệ độ (degrees) cho CSS
+                const rotateYDeg = theta * (180 / Math.PI);
+                const rotateXDeg = (phi * (180 / Math.PI)) - 90;
                 
-                const x = radius * Math.sin(phi) * Math.cos(theta);
-                const y = radius * Math.sin(phi) * Math.sin(theta);
-                const z = radius * Math.cos(phi);
-                
-                card.style.transform = `translate3d(${x}px, ${y}px, ${z}px)`;
+                // ĐẶC BIỆT: rotateY -> rotateX -> translateZ giúp bẻ cong hướng ảnh ôm trọn vào bề mặt tâm cầu
+                card.style.transform = `rotateY(${rotateYDeg}deg) rotateX(${-rotateXDeg}deg) translateZ(${radius}px)`;
             });
         }
 
-        /* --- HIỆU ỨNG GÕ CHỮ CHO BỨC THƯ (MÀN HÌNH 4) --- */
+        /* --- HIỆU ỨNG GÕ CHỮ --- */
         const contentMessage = `Chúc bạn nhỏ của tui mau ăn chóng lớn và ngoan ngoãn nhé. Luôn vui vẻ, nở nụ cười trên môi và đặc biệt là không được tiêu cực ạ.\n\nChúc bạn nhỏ ngày càng xinh xắn, dễ thương, mong bạn có tất cả cả vũ trụ va vào.\n\nThương bạn nhỏ của tui nhiều lắm... ❤️`;
         let textIndex = 0;
 
@@ -337,7 +357,7 @@
             if (textIndex < contentMessage.length) {
                 typingElement.innerHTML += contentMessage.charAt(textIndex);
                 textIndex++;
-                setTimeout(startTyping, 50); // Tốc độ gõ chữ (ms)
+                setTimeout(startTyping, 50);
             }
         }
 
