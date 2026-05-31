@@ -37,106 +37,56 @@
             transform: scale(0.9);
         }
         
-        /* --- MÀN HÌNH 1: TRÁI TIM HỒNG CHẠM KÍCH HOẠT --- */
+        /* --- MÀN HÌNH 1: NÚM TRÒN CHẠM KÍCH HOẠT --- */
         #screen1 {
-            background: radial-gradient(circle, #ff2a85 0%, #3a001c 100%);
+            background: radial-gradient(circle, #3a001c 0%, #050505 100%);
             flex-direction: column;
         }
-        .heart-btn {
-            width: 150px;
-            height: 150px;
-            background: #ff007f;
-            position: relative;
-            transform: rotate(-45deg);
-            box-shadow: 0 0 30px #ff007f;
-            cursor: pointer;
-            animation: pulse 1.2s infinite;
-        }
-        .heart-btn:before, .heart-btn:after {
-            content: "";
-            width: 150px;
-            height: 150px;
-            background: #ff007f;
+        /* Tạo hình núm tròn 3D lấp lánh */
+        .circle-btn {
+            width: 130px;
+            height: 130px;
+            background: radial-gradient(circle, #ff52a0 0%, #ff007f 100%);
             border-radius: 50%;
-  <!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dear Gift - Sphere Glass 3D</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        body, html {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            background-color: #050505;
-            font-family: 'Arial', sans-serif;
-            color: #fff;
-            user-select: none;
-        }
-
-        /* --- MÀN HÌNH CHUNG --- */
-        .screen {
-            position: absolute;
-            width: 100%;
-            height: 100%;
+            cursor: pointer;
+            position: relative;
+            box-shadow: 0 0 30px rgba(255, 0, 127, 0.6), inset 0 0 15px rgba(255, 255, 255, 0.4);
+            border: 2px solid rgba(255, 255, 255, 0.2);
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: opacity 1s ease, transform 1s ease;
-            z-index: 1;
+            font-size: 1.5rem;
         }
-        .hidden {
-            opacity: 0;
-            pointer-events: none;
-            transform: scale(0.9);
-        }
-        
-        /* --- MÀN HÌNH 1: TRÁI TIM HỒNG CHẠM KÍCH HOẠT --- */
-        #screen1 {
-            background: radial-gradient(circle, #ff2a85 0%, #3a001c 100%);
-            flex-direction: column;
-        }
-        .heart-btn {
-            width: 150px;
-            height: 150px;
-            background: #ff007f;
-            position: relative;
-            transform: rotate(-45deg);
-            box-shadow: 0 0 30px #ff007f;
-            cursor: pointer;
-            animation: pulse 1.2s infinite;
-        }
-        .heart-btn:before, .heart-btn:after {
+        /* Tạo hiệu ứng vòng sóng lan tỏa (Ripple Effect) xung quanh núm tròn */
+        .circle-btn::before {
             content: "";
-            width: 150px;
-            height: 150px;
-            background: #ff007f;
-            border-radius: 50%;
             position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 2px solid #ff007f;
+            border-radius: 50%;
+            animation: ripple 1.8s infinite linear;
+            opacity: 0;
         }
-        .heart-btn:before { top: -75px; left: 0; }
-        .heart-btn:after { left: 75px; top: 0; }
-        
-        @keyframes pulse {
-            0% { transform: rotate(-45deg) scale(1); }
-            50% { transform: rotate(-45deg) scale(1.1); box-shadow: 0 0 50px #ff007f; }
-            100% { transform: rotate(-45deg) scale(1); }
+        @keyframes ripple {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(1.6); opacity: 0; }
         }
         .hint-text {
-            margin-top: 100px;
-            font-size: 1.2rem;
-            letter-spacing: 2px;
+            margin-top: 40px;
+            font-size: 1.1rem;
+            letter-spacing: 3px;
             text-transform: uppercase;
-            text-shadow: 0 0 10px #fff;
+            text-shadow: 0 0 10px #ff3399;
+            color: #ff71b3;
+            animation: blink 1.5s infinite ease-in-out;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; text-shadow: 0 0 20px #ff3399; }
         }
 
-        /* --- MÀN HÌNH 2: CANVAS HẠT ÁNH SÁNG BAO CHÙM & TỤ CHỮ --- */
+        /* --- MÀN HÌNH 2: CANVAS HẠT ÁNH SÁNG BAO TRÙM & TỤ CHỮ --- */
         #screen2 canvas {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -331,8 +281,8 @@
 <body>
 
     <div class="screen" id="screen1">
-        <div class="heart-btn" onclick="startGift()"></div>
-        <div class="hint-text">Chạm vào đây đi</div>
+        <div class="circle-btn" onclick="startGift()">✨</div>
+        <div class="hint-text">Chạm vào núm tròn đi nè</div>
     </div>
 
     <div class="screen hidden" id="screen2">
@@ -504,29 +454,34 @@
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
             
+            // Tạo 400 hạt ánh sáng bay bao phủ khắp màn hình ngay từ đầu
             for (let i = 0; i < 400; i++) {
                 particles.push({
                     x: Math.random() * canvas.width,
                     y: Math.random() * canvas.height,
+                    // Tọa độ mục tiêu hội tụ nằm ở khu vực giữa màn hình nơi chữ xuất hiện
                     originX: canvas.width / 2 + (Math.random() - 0.5) * 200,
                     originY: canvas.height / 2 + (Math.random() - 0.5) * 80,
                     size: Math.random() * 3 + 0.5,
-                    color: `hsl(${Math.random() * 50 + 310}, 100%, 70%)`, 
-                    speedX: (Math.random() - 0.5) * 2.5, 
+                    color: `hsl(${Math.random() * 50 + 310}, 100%, 70%)`, // Hạt sáng tone màu hồng/tím lấp lánh
+                    speedX: (Math.random() - 0.5) * 2.5, // Tốc độ bay tự do ban đầu rộng hơn
                     speedY: (Math.random() - 0.5) * 2.5,
                     gathering: false
                 });
             }
             animateParticles();
 
+            // Sau 2.5 giây, ra lệnh cho toàn bộ hạt ánh sáng đồng loạt hút quy tụ về tâm chữ
             setTimeout(() => { 
                 particles.forEach(p => p.gathering = true); 
             }, 2500);
 
+            // Sau 4 giây, khi các hạt đã quy tụ lại đặc đặc ở giữa, kích hoạt hiển thị con chữ ra rực rỡ
             setTimeout(() => { 
                 document.getElementById('textOverlay').classList.add('show'); 
             }, 4000);
 
+            // Sau 7.5 giây, tự động chuyển tiếp sang màn hình Quả cầu Glass 3D
             setTimeout(goToSphere, 7500);
         }
 
@@ -534,10 +489,12 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             particles.forEach(p => {
                 if (!p.gathering) {
+                    // Trạng thái 1: Hạt ánh sáng chuyển động tự do bao trùm khắp màn hình
                     p.x += p.speedX; p.y += p.speedY;
                     if (p.x < 0 || p.x > canvas.width) p.speedX *= -1;
                     if (p.y < 0 || p.y > canvas.height) p.speedY *= -1;
                 } else {
+                    // Trạng thái 2: Hạt ánh sáng co cụm quy tụ dần thành khu vực chữ
                     p.x += (p.originX - p.x) * 0.04;
                     p.y += (p.originY - p.y) * 0.04;
                 }
